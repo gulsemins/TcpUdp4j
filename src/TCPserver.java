@@ -1,24 +1,37 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class TCPserver {
     public static void main(String[] args) throws IOException {
+
+        String username = "test";
+        String password = "1234";
 
         ServerSocket ss=new ServerSocket(5000);
         Socket s=ss.accept();
         System.out.println("client connected");
 
-        //read message from client
-        InputStreamReader in = new InputStreamReader(s.getInputStream());
-        BufferedReader bf = new BufferedReader(in);
+        BufferedReader bf = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        PrintWriter pr = new PrintWriter(s.getOutputStream(), true);
 
-        String str = bf.readLine();
-        System.out.println("client: " + str);
+        String receivedUsername = bf.readLine();
+        String receivedPassword = bf.readLine();
 
-        PrintWriter pr = new PrintWriter(s.getOutputStream());
-        pr.println("hello from server");
-        pr.flush();
+        if(receivedUsername.equals(username) && receivedPassword.equals(password)){
+            pr.println("Welcome!");
+        } else {
+            pr.println("Invalid credentials!");
+        }
+
+
+        String message = bf.readLine();
+        System.out.println("client: " + message);
+
+
+        s.close();
+        ss.close();
 
 
 
